@@ -33,15 +33,13 @@ using std::experimental::optional;
 magma::SessionSet create_session_set_req(
     magma::SessionState::SessionInfo info) {
   magma::SessionSet req;
-  magma::lte::Fsm_state_FsmState state         = info.state;
-  std::string subscriber_id                    = info.subscriber_id;
-  uint32_t sess_ver_no                         = info.ver_no;
-  magma::SessionState::SessionInfo::NodeId tmp = info.nodeId;
-  std::string node_id                          = tmp.node_id;
+  magma::lte::Fsm_state_FsmState state = info.state;
+  std::string subscriber_id            = info.subscriber_id;
+  uint32_t sess_ver_no                 = info.ver_no;
   req.set_subscriber_id(subscriber_id);
   req.set_session_version(sess_ver_no);
   req.set_local_f_teid(info.local_f_teid);
-  req.mutable_node_id()->set_node_id(node_id);
+  req.mutable_node_id()->set_node_id(info.nodeId.node_id);
   req.mutable_node_id()->set_node_id_type(magma::NodeID::IPv4);
   req.mutable_state()->set_state(state);
 

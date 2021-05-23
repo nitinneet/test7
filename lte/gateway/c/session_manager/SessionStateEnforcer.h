@@ -75,9 +75,19 @@ class SessionStateEnforcer {
   void m5g_update_session_state_to_amf(
       const std::string& imsi, uint32_t teid, uint32_t version);
 
- private:
   std::vector<std::string> static_rules;
 
+  /* Get N3 ip  address of UPF */
+  std::string get_upf_n3_addr();
+
+  /* Get N3 ip  address of UPF */
+  std::string get_upf_node_id();
+
+  /* Initialize the upf node id and n3 address
+   */
+  bool set_upf_node(const std::string& node_id, const std::string& n3_addr);
+
+ private:
   ConvergedRuleStore GlobalRuleList;
   std::unordered_multimap<std::string, uint32_t> pdr_map_;
   std::unordered_multimap<std::string, uint32_t> far_map_;
@@ -89,6 +99,16 @@ class SessionStateEnforcer {
   folly::EventBase* evb_;
   std::chrono::seconds retry_timeout_;
   magma::mconfig::SessionD mconfig_;
+  /* For now we are keeping local teid_counter in this class,
+   * in future once we support multiple UPF under SMF, below
+   * upf_node_id has to be moved/associated with PipelineClient,
+   * and the following 2 variables (counter + N3 ip address)
+   * has to be mainted for every PipeliendClient (UPF node_id)
+   */
+  std::string upf_node_id_;
+  uint32_t teid_counter_;
+  std::string upf_node_ip_addr_;
+
   // Timer used to forcefully terminate session context on time out
   long session_force_termination_timeout_ms_;
   bool static_rule_init();
